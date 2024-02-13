@@ -7,7 +7,7 @@ const renderCards = characters =>{
       for (const char of characters){
           character_list.innerHTML +=`
           <div class="card">
-              <h3>${char.title}</h3>
+              <h3>${char.name}</h3>
               <img src=${char.image} alt="${char.title}">
               </div>
               `
