@@ -1,5 +1,7 @@
 const cards = document.getElementsByClassName('cards');
 const CHARACTER_LIST = [];
+let nextPageUrl = '';
+let prevPageUrl = '';
 
 const renderCards = characters =>{ 
     const character_list = document.querySelector('main.cards');
@@ -11,27 +13,28 @@ const renderCards = characters =>{
               <img src=${char.image} alt="${char.title}">
               </div>
               `
-              /* <img src="https://image.tmdb.org/t/p/w185${card.poster_path}" alt="${card.title}"> */
   
     }
   }
 
 
 
-const fetchCharacters = async () => {
+  const fetchCharacters = async (url = "https://rickandmortyapi.com/api/character") => {
     try {
-        const response = await fetch(
-        "https://rickandmortyapi.com/api/character"
-        );
-    
+        const response = await fetch(url);
+
         if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
+
         const data = await response.json();
-    
+        nextPageUrl = data.info.next;
+        prevPageUrl = data.info.prev;
+
         CHARACTER_LIST.length = 0; 
+        console.log(data);
         console.log(data.results);
+
         data.results.forEach(character => CHARACTER_LIST.push(character));
         
     } catch (error) {
@@ -41,8 +44,25 @@ const fetchCharacters = async () => {
 
 const home = async () => {
     await fetchCharacters();
-    //getPopularSeries();
     renderCards(CHARACTER_LIST);
 }
 
 home();
+
+const pageUpBtns = Array.from(document.getElementsByClassName("page-up"));
+
+pageUpBtns.map(btn => btn.addEventListener('click', async () => {
+    if (nextPageUrl) {
+        await fetchCharacters(nextPageUrl);
+        renderCards(CHARACTER_LIST);
+    }
+}));
+
+const pageDownBtns = Array.from(document.getElementsByClassName("page-down"));
+
+pageDownBtns.map(btn => btn.addEventListener('click', async () => {
+    if (prevPageUrl) {
+        await fetchCharacters(prevPageUrl);
+        renderCards(CHARACTER_LIST);
+    }
+}));

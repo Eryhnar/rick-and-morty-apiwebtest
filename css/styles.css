@@ -68,6 +68,14 @@ body{
     padding: 1em;
 }
 
+.page-button{
+    background-color: white;
+    padding: 0.2em;
+    border-radius: 0.5em;
+    width: 3em;
+    text-align: center;
+}
+
 
 footer{
     background-color: #000000;
